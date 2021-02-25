@@ -34,7 +34,7 @@ build: clean lambda
 .PHONY: package
 package:
 		aws s3 cp open-api-integrated.yaml s3://uchenchostorage/open-api/$(SERVICE_NAME)/open-api-integrated.yaml
-		aws cloudformation package --template-file $(TEMPLATE) --s3-bucket uchenchostorage --output-template-file $(PACKAGED_TEMPLATE) --capabilities CAPABILITY_IAM
+		aws cloudformation package --template-file $(TEMPLATE) --s3-bucket uchenchostorage --output-template-file $(PACKAGED_TEMPLATE)
 		aws cloudformation deploy --template-file $(PACKAGED_TEMPLATE) --stack-name $(STACK_NAME) --capabilities CAPABILITY_IAM
 
 .PHONY: application

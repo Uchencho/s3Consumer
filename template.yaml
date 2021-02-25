@@ -52,6 +52,8 @@ Resources:
           S3_BUCKET: !Ref S3ConsumerBucket
       Policies:
         - VPCAccessPolicy: {}
+        - S3CrudPolicy:
+            BucketName: !Ref S3ConsumerBucket
       Events:
         Register:
           Type: Api
