@@ -7,6 +7,8 @@ github.com/Joker/hpp v1.0.0/go.mod h1:8x5n+M1Hp5hC0g8okX3sR3vFQwynaX/UgSOM9MeBKz
 github.com/Shopify/goreferrer v0.0.0-20181106222321-ec9c9a553398/go.mod h1:a1uqRtAwp2Xwc6WNPJEufxJ7fx3npB4UV/JOLmbu5I0=
 github.com/Uchencho/commons v0.0.0-20210225111757-078d487bd1b6 h1:N7v3p6Xr3kXF5ohkugDQV+NfeEJjveIy1O7fsmC2Yk0=
 github.com/Uchencho/commons v0.0.0-20210225111757-078d487bd1b6/go.mod h1:hepJSEi/Gkoju5H5+KMthUnfVAXjaV9XicI3JsGhOdI=
+github.com/Uchencho/commons v0.0.0-20210225141234-ed2d4e60c18e h1:DxuMwzn5DST9VSYEbt0IX+bAO+DVME+o+fm5sxFZjmc=
+github.com/Uchencho/commons v0.0.0-20210225141234-ed2d4e60c18e/go.mod h1:hepJSEi/Gkoju5H5+KMthUnfVAXjaV9XicI3JsGhOdI=
 github.com/ajg/form v1.5.1/go.mod h1:uL1WgH+h2mgNtvBq0339dVnzXdBETtL2LeUXaIv25UY=
 github.com/andybalholm/brotli v1.0.0/go.mod h1:loMXtMfwqflxFJPmdbJO0a3KNoPuLBgiu3qAvBg8x/Y=
 github.com/andybalholm/brotli v1.0.1/go.mod h1:loMXtMfwqflxFJPmdbJO0a3KNoPuLBgiu3qAvBg8x/Y=

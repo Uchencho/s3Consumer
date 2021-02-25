@@ -55,12 +55,28 @@ Resources:
         - S3CrudPolicy:
             BucketName: !Ref S3ConsumerBucket
       Events:
-        Register:
+        Upload:
           Type: Api
           Properties:
             RestApiId: !Ref ApiGateway
             Path: /upload
             Method: post
+  
+  ConsumerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: main-consumer
+      Timeout: 300
+      MemorySize: 512
+      Runtime: go1.x
+      FunctionName: !Sub ${ServiceName}-consumer-${Stage}
+      Environment:
+        Variables:
+          S3_BUCKET: !Ref S3ConsumerBucket
+      Policies:
+        - VPCAccessPolicy: {}
+        - S3CrudPolicy:
+            BucketName: !Ref S3ConsumerBucket
 
 
 Outputs:
@@ -82,3 +98,7 @@ Outputs:
     Export:
       Name: !Sub ${ServiceName}-arn
   
+  S3ConsumerBucketName:
+    Value: !Ref S3ConsumerBucket
+    Export:
+      Name: s3-consumer-bucket

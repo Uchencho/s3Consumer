@@ -11,7 +11,6 @@ import (
 	"github.com/julienschmidt/httprouter"
 
 	commonAWS "github.com/Uchencho/commons/aws"
-	"github.com/Uchencho/s3Consumer/internal/pkg"
 	internalStorage "github.com/Uchencho/s3Consumer/internal/storage"
 )
 
@@ -68,7 +67,10 @@ func (a *App) Handler() http.HandlerFunc {
 }
 
 func (a *App) Consumer() pubsub.ConsumerFunc {
+
+	bucketName := os.Getenv("S3_BUCKET")
+
 	router := pubsub.NewConsumerRouter()
-	router.Register(pkg.HandleUploadMessageType(), a.ZipFileConsumer)
+	router.Register(bucketName, a.ZipFileConsumer)
 	return pubsub.DefaultConsumerWrapper(os.Stdout)(router.Consume)
 }

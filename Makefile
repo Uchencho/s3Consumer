@@ -1,4 +1,5 @@
 OUTPUT = main # will be archived
+OUTPUT_CONSUMER = main-consumer
 SERVICE_NAME = s3Consumer
 PACKAGED_TEMPLATE = packaged.yaml # will be archived
 TEMPLATE = template.yaml
@@ -11,10 +12,12 @@ test:
 
 clean:
 	rm -f $(OUTPUT)
+	rm -f $(OUTPUT_CONSUMER)
 	rm -f $(PACKAGED_TEMPLATE)
 
 main: ./cmd/$(SERVICE_NAME)-lambda/main.go
 	go build -o $(OUTPUT) ./cmd/$(SERVICE_NAME)-lambda/main.go
+	go build -o $(OUTPUT_CONSUMER) ./cmd/$(SERVICE_NAME)-consumer-lambda/main.go
 	
 build-local:
 	go build -o $(OUTPUT) ./cmd/$(SERVICE_NAME)/main.go

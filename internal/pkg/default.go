@@ -5,10 +5,6 @@ import (
 	"github.com/Uchencho/commons/uuid"
 )
 
-const (
-	handleUploadMessage = "handle-upload"
-)
-
 // User is a representation of an addyflex user
 type User struct {
 	ID             uuid.V4     `json:"id"`
@@ -24,6 +20,3 @@ type User struct {
 	Latitude       string      `json:"latitude,omitempty"`
 	DeviceID       string      `json:"device_id,omitempty"`
 }
-
-// HandleUploadMessageType returns the message type to handle an upload request
-func HandleUploadMessageType() string { return handleUploadMessage }
