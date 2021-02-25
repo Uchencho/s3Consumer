@@ -1,0 +1,100 @@
+openapi: 3.0.0
+info:
+  description: Internal APIs for interacting with the s3 Consumer service
+  version: 1.0.0
+  title: s3Consumer
+  contact:
+    email: alozyuche@gmail.com
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+x-amazon-apigateway-binary-media-types:
+  - "application/zip"
+  - "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  - "application/vnd.ms-excel"
+  - "multipart/form-data"
+  - "text/csv"
+x-amazon-apigateway-policy:
+  Version: "2012-10-17"
+  Statement:
+    - Effect: Allow
+      Principal: "*"
+      Action: execute-api:Invoke
+      Resource:
+        - execute-api:/*
+
+paths:
+  /upload:
+    post:
+      summary: Upload raw files
+      description: Upload raw files
+      operationId: upload
+      responses:
+        "400":
+          $ref: "#/components/responses/IllegalInput"
+        "500":
+          $ref: "#/components/responses/InteralServerError"
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Function.Arn}/invocations
+        httpMethod: POST
+        passthroughBehavior: when_no_match
+        type: aws_proxy
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          description: A machine parsable error code
+          type: string
+          default: internal_error
+          enum:
+            - dependency_failure
+            - unrecoverable_error
+        message:
+          description: A human readable message describing the error
+          type: string
+    BadRequestError:
+      description: Bad input provided by client
+      allOf:
+        - $ref: "#/components/schemas/Error"
+        - type: object
+          properties:
+            params:
+              description: A map for meta data around the error that occured
+              type: object
+    ServerError:
+      description: Internal server error
+      allOf:
+        - $ref: "#/components/schemas/Error"
+        - type: object
+          properties:
+            params:
+              description: A map for meta data around the error that occured
+              type: object
+            serviceName:
+              description: The name of the service that errored out
+              type: string
+            callChain:
+              description: A topological sort of all the services that errored out during the request
+              type: array
+              items:
+                description: The name of the service
+                type: string
+  responses:
+    NotFound:
+      description: Entity not found
+    IllegalInput:
+      description: Illegal input for operation
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BadRequestError"
+    InteralServerError:
+      description: Server Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ServerError"
