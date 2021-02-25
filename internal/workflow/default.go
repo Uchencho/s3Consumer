@@ -20,11 +20,10 @@ type RawToS3Func func(s []httputils.FileDetails) error
 // UploadFileToS3 uploads a number of files to an s3 bucket
 func UploadFileToS3(UUIDGenerator uuid.GenV4Func,
 	provideTime ctime.EpochProviderFunc,
-	upload storage.UploadS3FileFunc,
-	timeProvider ctime.EpochProviderFunc) RawToS3Func {
+	upload storage.UploadS3FileFunc) RawToS3Func {
 	return func(s []httputils.FileDetails) error {
 
-		t := timeProvider().ToISO8601().DateString()
+		t := provideTime().ToISO8601().DateString()
 
 		for _, fd := range s {
 
