@@ -3,8 +3,10 @@ package workflow
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"strings"
 
+	"github.com/Uchencho/s3Consumer/internal/pkg"
 	"github.com/Uchencho/s3Consumer/internal/storage"
 
 	"github.com/Uchencho/commons/ctime"
@@ -16,6 +18,9 @@ import (
 
 // RawToS3Func provides the functionality of uploading raw data to S3
 type RawToS3Func func(s []httputils.FileDetails) error
+
+// ZipHandleFunc provides the functionality of handling an s3 sqs event
+type ZipHandleFunc func(r pkg.User) error
 
 // UploadFileToS3 uploads a number of files to an s3 bucket
 func UploadFileToS3(UUIDGenerator uuid.GenV4Func,
@@ -38,6 +43,14 @@ func UploadFileToS3(UUIDGenerator uuid.GenV4Func,
 				return errors.Wrapf(err, "workflow - Unable to upload file %s", fd.FileName)
 			}
 		}
+		return nil
+	}
+}
+
+// HandleZipFile handles an sqs event of a file uploaded to s3
+func HandleZipFile() ZipHandleFunc {
+	return func(u pkg.User) error {
+		log.Printf("Recieved user with details %+v", u)
 		return nil
 	}
 }

@@ -6,6 +6,7 @@ import (
 
 	"github.com/Uchencho/commons/aws/storage"
 	"github.com/Uchencho/commons/ctime"
+	"github.com/Uchencho/commons/pubsub"
 	"github.com/Uchencho/commons/uuid"
 	"github.com/julienschmidt/httprouter"
 
@@ -16,6 +17,7 @@ import (
 // App is a representation of the application
 type App struct {
 	RawUploadHandler http.HandlerFunc
+	ZipFileConsumer  pubsub.ConsumerFunc
 }
 
 // OptionalArgs is a representation of all the optional arguments for this application
@@ -47,9 +49,11 @@ func New(opts ...Option) App {
 
 	uploadFiles := internalStorage.UploadFileToS3(oa.S3Bucket, oa.S3Uploader)
 	uploadHandler := RawUploadHandler(oa.UUIDGenerator, oa.TimeProvider, uploadFiles)
+	handleZip := HandleUploadConsumer()
 
 	return App{
 		RawUploadHandler: uploadHandler,
+		ZipFileConsumer:  handleZip,
 	}
 }
 
@@ -60,4 +64,13 @@ func (a *App) Handler() http.HandlerFunc {
 
 	h := http.HandlerFunc(router.ServeHTTP)
 	return h
+}
+
+func (a *App) Consumer() pubsub.ConsumerFunc {
+
+	bucketName := os.Getenv("S3_BUCKET")
+
+	router := pubsub.NewConsumerRouter()
+	router.Register(bucketName, a.ZipFileConsumer)
+	return pubsub.DefaultConsumerWrapper(os.Stdout)(router.Consume)
 }
